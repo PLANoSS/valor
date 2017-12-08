@@ -20,7 +20,7 @@ var jsonSource_Oferta2017_0 = new ol.source.Vector({
 jsonSource_Oferta2017_0.addFeatures(features_Oferta2017_0);var lyr_Oferta2017_0 = new ol.layer.Vector({
                 source:jsonSource_Oferta2017_0, 
                 style: style_Oferta2017_0,
-    title: 'Oferta 2017<br />\
+    title: 'Precio de oferta del suelo 2017 ($/m2)<br />\
     <img src="styles/legend/Oferta2017_0_0.png" />  7 - 100 <br />\
     <img src="styles/legend/Oferta2017_0_1.png" />  100 - 200 <br />\
     <img src="styles/legend/Oferta2017_0_2.png" />  200 - 300 <br />\
@@ -38,7 +38,7 @@ var jsonSource_oferta2016_1 = new ol.source.Vector({
 jsonSource_oferta2016_1.addFeatures(features_oferta2016_1);var lyr_oferta2016_1 = new ol.layer.Vector({
                 source:jsonSource_oferta2016_1, 
                 style: style_oferta2016_1,
-    title: 'oferta 2016<br />\
+    title: 'Precio de oferta del suelo 2016 ($/m2)<br />\
     <img src="styles/legend/oferta2016_1_0.png" />  7 - 100 <br />\
     <img src="styles/legend/oferta2016_1_1.png" />  100 - 200 <br />\
     <img src="styles/legend/oferta2016_1_2.png" />  200 - 300 <br />\
