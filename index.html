@@ -1,109 +1,52 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Valores de suelo en Ecuador</title>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-		<link rel="stylesheet" type="text/css" href="css/own_style.css">
-		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-		<script src="js/leaflet-hash.js"></script>
-		<script src="js/Autolinker.min.js"></script>
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	</head>
-	<body>
-		<div id="map"></div>
-		<script src="data/exp_todo.js"></script>
-		<script>
-		var map = L.map('map', {
-			zoomControl:true, maxZoom:19
-		}).fitBounds([[-4.12194090669,-82.8579983689],[-0.873396025625,-76.8744322868]]);
-		var hash = new L.Hash(map);
-		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
-		var feature_group = new L.featureGroup([]);
-		var raster_group = new L.LayerGroup([]);
-		var basemap_0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', { 
-			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-		});	
-		basemap_0.addTo(map);	
-		var layerOrder=new Array();
-		function pop_todo(feature, layer) {					
-			var popupContent = '<table><tr><th scope="row">Nombre</th><td>' + Autolinker.link(String(feature.properties['Nombre'])) + '</td></tr><tr><th scope="row">X</th><td>' + Autolinker.link(String(feature.properties['X'])) + '</td></tr><tr><th scope="row">Y</th><td>' + Autolinker.link(String(feature.properties['Y'])) + '</td></tr><tr><th scope="row">V_act</th><td>' + Autolinker.link(String(feature.properties['V_act'])) + '</td></tr><tr><th scope="row">Agua</th><td>' + Autolinker.link(String(feature.properties['Agua'])) + '</td></tr><tr><th scope="row">Luz</th><td>' + Autolinker.link(String(feature.properties['Luz'])) + '</td></tr><tr><th scope="row">Tipo_via</th><td>' + Autolinker.link(String(feature.properties['Tipo_via'])) + '</td></tr><tr><th scope="row">Ancho_via</th><td>' + Autolinker.link(String(feature.properties['Ancho_via'])) + '</td></tr><tr><th scope="row">Superficie</th><td>' + Autolinker.link(String(feature.properties['Superficie'])) + '</td></tr><tr><th scope="row">Zona</th><td>' + Autolinker.link(String(feature.properties['Zona'])) + '</td></tr><tr><th scope="row">Fuente</th><td>' + Autolinker.link(String(feature.properties['Fuente'])) + '</td></tr><tr><th scope="row">Fecha</th><td>' + Autolinker.link(String(feature.properties['Fecha'])) + '</td></tr><tr><th scope="row">V_cat</th><td>' + Autolinker.link(String(feature.properties['V_cat'])) + '</td></tr><tr><th scope="row">Dif_p</th><td>' + Autolinker.link(String(feature.properties['Dif_p'])) + '</td></tr></table>';
-			layer.bindPopup(popupContent);
-		}
-
-		function doStyletodo(feature) {
-			if (feature.properties.V_act >= 7.0 && feature.properties.V_act <= 125.0) {
-				return {
-					radius: '2.0',
-					fillColor: '#21f100',
-					color: '#000000',
-					weight: 1,
-					fillOpacity: '1.0',
-				}
-			}
-			if (feature.properties.V_act >= 125.0 && feature.properties.V_act <= 175.0) {
-				return {
-					radius: '5.5',
-					fillColor: '#c7f100',
-					color: '#000000',
-					weight: 1,
-					fillOpacity: '1.0',
-				}
-			}
-			if (feature.properties.V_act >= 175.0 && feature.properties.V_act <= 200.0) {
-				return {
-					radius: '9.0',
-					fillColor: '#fff100',
-					color: '#000000',
-					weight: 1,
-					fillOpacity: '1.0',
-				}
-			}
-			if (feature.properties.V_act >= 200.0 && feature.properties.V_act <= 253.424) {
-				return {
-					radius: '12.5',
-					fillColor: '#ffa100',
-					color: '#000000',
-					weight: 1,
-					fillOpacity: '1.0',
-				}
-			}
-			if (feature.properties.V_act >= 253.424 && feature.properties.V_act <= 1590.91) {
-				return {
-					radius: '16.0',
-					fillColor: '#ff0000',
-					color: '#000000',
-					weight: 1,
-					fillOpacity: '1.0',
-				}
-			}
-		}
-		var exp_todoJSON = new L.geoJson(exp_todo,{
-			onEachFeature: pop_todo,
-			pointToLayer: function (feature, latlng) {  
-				return L.circleMarker(latlng, doStyletodo(feature))
-			}
-		});
-		//add comment sign to hide this layer on the map in the initial view.
-		feature_group.addLayer(exp_todoJSON);
-
-		feature_group.addTo(map);
-		var title = new L.Control();
-		title.onAdd = function (map) {
-			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-			this.update();
-			return this._div;
-		};
-		title.update = function () {
-			this._div.innerHTML = '<h2>Valores de suelo en Ecuador</h2>'
-		};
-		title.addTo(map);
-	var baseMaps = {
-		'OSM Black & White': basemap_0
-	};
-		L.control.layers(baseMaps,{"todo": exp_todoJSON},{collapsed:false}).addTo(map);
-		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
-	</script>
-</body>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" type="text/css" href="resources/horsey.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/ol3-search-layer.min.css">
+        <link rel="stylesheet" href="./resources/ol3-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        </style>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+        <script src="resources/qgis2web_expressions.js"></script>
+        <script src="resources/polyfills.js"></script>
+        <script src="./resources/rbush.min.js"></script>
+        <script src="./resources/labelgun.min.js"></script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="http://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList,URL"></script>
+        <script src="resources/horsey.min.js"></script>
+        <script src="resources/ol3-search-layer.min.js"></script>
+        <script src="./resources/ol3-layerswitcher.js"></script>
+        <script src="layers/Oferta2017_0.js"></script><script src="layers/oferta2016_1.js"></script>
+        <script src="styles/Oferta2017_0_style.js"></script><script src="styles/oferta2016_1_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/qgis2web.js"></script>
+        <script src="./resources/Autolinker.min.js"></script>
+    </body>
 </html>
